@@ -19,6 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+/*
+* I know that it's obviously better to use JavaFX instead of
+* swing but at that time i didn't knew anything about JavaFX
+*/
 @SuppressWarnings("serial")
 public class Main extends JFrame implements ActionListener {
 
@@ -27,12 +31,12 @@ public class Main extends JFrame implements ActionListener {
 	JButton connect;
 	JTextField selfconnect;
 	JLabel selfconnecttitle;
-	String connectionURL = "192.168.178.33::2350@TMCanyon";
+	String connectionURL = "192.168.178.33::2350@TMCanyon"; //IP of the Gameserver
 	static boolean serverup = false;
 	static boolean gmup = false;
 	boolean allowed = false;
 	public static Main main;
-	static File game = new File("C:\\Program Files (x86)\\ManiaPlanet\\ManiaPlanet.exe");
+	static File game = new File("C:\\Program Files (x86)\\ManiaPlanet\\ManiaPlanet.exe"); //Path to the Game
 	static File config = new File("tm2config.yml");
 
 	public Main(String[] args) {
@@ -42,17 +46,17 @@ public class Main extends JFrame implements ActionListener {
 		status.setLocation(124, 0);
 		status.setSize(240, 50);
 		if (serverup && gmup) {
-			status.setText("Beide Server sind online.");
+			status.setText("Server is online!");
 			status.setSelected(true);
-			status.setToolTipText("Der Linux und der Gameserver sind beide gestartet.");
+			status.setToolTipText("The Server is running and online!");
 		} else if (serverup && !gmup) {
-			status.setText("Server ist online, Gameserver nicht.");
+			status.setText("Server is running");
 			status.setSelected(false);
-			status.setToolTipText("Der Linux Server ist gestartet, der Gameserver aber nicht.");
+			status.setToolTipText("The Server is running but not online");
 		} else if (!serverup) {
-			status.setText("Beide Server sind offline.");
+			status.setText("Sever is down");
 			status.setSelected(false);
-			status.setToolTipText("Der Linux Server scheint nicht oben zu sein.");
+			status.setToolTipText("It seems like the server is down");
 		}
 		status.addActionListener(this);
 		getContentPane().add(status);
@@ -60,13 +64,13 @@ public class Main extends JFrame implements ActionListener {
 		statustitle = new JLabel();
 		statustitle.setLocation(0, 0);
 		statustitle.setSize(120, 50);
-		statustitle.setText("Status des Servers:");
+		statustitle.setText("Serverstatus:");
 		getContentPane().add(statustitle);
 
 		connect = new JButton();
 		connect.setLocation(6, 53);
 		connect.setSize(100, 50);
-		connect.setText("Verbinden");
+		connect.setText("Connect");
 		connect.addActionListener(this);
 		getContentPane().add(connect);
 
@@ -76,7 +80,7 @@ public class Main extends JFrame implements ActionListener {
 		if (gmup) {
 			selfconnect.setText("maniaplanet://#join=" + connectionURL);
 		} else {
-			selfconnect.setText("Server ist offline");
+			selfconnect.setText("Server is not online");
 			selfconnect.setEnabled(false);
 			;
 		}
@@ -86,20 +90,31 @@ public class Main extends JFrame implements ActionListener {
 		selfconnecttitle = new JLabel();
 		selfconnecttitle.setLocation(156, 48);
 		selfconnecttitle.setSize(170, 20);
-		selfconnecttitle.setText("Code zum selber verbinden:");
+		selfconnecttitle.setText("ManiaPlanet connect code:");
 		getContentPane().add(selfconnecttitle);
 
-		setTitle("TrackMania² Server Checker");
+		setTitle("TrackManiaÂ² Server Checker");
 		setSize(380, 140);
 		setVisible(true);
 		setResizable(false);
 	}
 
 	public static void main(String[] args) {
-		String ip = "tm2";
+		String ip = "tm2"; //IP / Hostname of the Server
 		URL url;
-		String serverchecker = "http://tm2/check.html";
+		/*Server needs to have a webserver installed and has to
+		* have the file 'check.html' just with the string
+		* 'true' or 'false' depending on wheter the dedicated
+		* server is running or not. At that time i had no idea
+		* of PHP and i just created a start-script that changed
+		* to true or false, it's easier and better when you use
+		* PHP. Maybe i will update the code for that.
+		*/
+		String serverchecker = "http://" + ip + "/check.html"; 		
 		try {
+			/*
+			* Pings the server to tell if the server is running
+			*/
 			InetAddress inet = InetAddress.getByName(ip);
 			if (inet.isReachable(15)) {
 				serverup = true;
@@ -120,9 +135,9 @@ public class Main extends JFrame implements ActionListener {
 				return;
 			}
 			if (!game.exists()) {
-				SendMessage sm = new SendMessage(
-						"Das Spiel wurde unter C:\\Program Files (x86)\\ManiaPlanet\\ManiaPlanet.exe nicht gefunden. Bitte gleich den Pfad zum Spiel eingeben!",
-						"Spiel nicht gefunden!", JOptionPane.WARNING_MESSAGE);
+				SendMessage sm = new SendMessage( 
+						"Gamefile not found under C:\\Program Files (x86)\\ManiaPlanet\\ManiaPlanet.exe. Please choose the path to the ManiaPlanet exe file in the upcoming window!",
+						"Game not found!", JOptionPane.WARNING_MESSAGE);
 				GamePathConfigurator gpc = new GamePathConfigurator();
 				return;
 			}
@@ -153,11 +168,11 @@ public class Main extends JFrame implements ActionListener {
 				allowed = true;
 			} else if (serverup && !gmup) {
 				JOptionPane.showMessageDialog(this,
-						"Da der Gameserver offline ist, kannst du dich nicht mit ihm verbinden.",
-						"Gameserver ist offline", JOptionPane.ERROR_MESSAGE);
+						"The server is not running so you can't connect!",
+						"Server is not running", JOptionPane.ERROR_MESSAGE);
 			} else {
-				JOptionPane.showMessageDialog(this, "Die beiden Server sind offline, du kannst nicht verbinden",
-						"Beide Server sind offline", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "The server is offline so you can't connect",
+						"Server is offline", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
