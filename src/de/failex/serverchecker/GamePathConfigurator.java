@@ -30,17 +30,17 @@ public class GamePathConfigurator extends JFrame implements ActionListener {
 		gamepathtitle = new JLabel();
 		gamepathtitle.setLocation(9, 4);
 		gamepathtitle.setSize(350, 20);
-		gamepathtitle.setText("Pfad zur Haupt Exe (ManiaPlanet.exe):");
+		gamepathtitle.setText("Path to the executable (ManiaPlanet.exe):");
 		getContentPane().add(gamepathtitle);
 
 		confirm = new JButton();
 		confirm.setLocation(10, 47);
 		confirm.setSize(350, 30);
-		confirm.setText("Pfad setzen");
+		confirm.setText("Set Path");
 		getContentPane().add(confirm);
 		confirm.addActionListener(this);
 
-		setTitle("Exe Pfad setzten");
+		setTitle("Set executable path");
 		setSize(380, 110);
 		setVisible(true);
 		setResizable(false);
@@ -51,20 +51,20 @@ public class GamePathConfigurator extends JFrame implements ActionListener {
 		if (e.getSource() == confirm) {
 			File game = new File(path.getText());
 			if (path.getText().equals("")) {
-				SendMessage sm = new SendMessage("Es wurde kein Pfad angegeben, bitte den Pfad zur Haupt Exe eingeben!",
-						"Kein Pfad angegeben!", JOptionPane.WARNING_MESSAGE);
+				SendMessage sm = new SendMessage("Please set the path to your game executable!",
+						"No Input!", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			if (!path.getText().contains("ManiaPlanet.exe")) {
-				SendMessage sm = new SendMessage("Du musst den Pfad zu der ManiaPlanet.exe angeben!",
-						"Kein richtigen Pfad angegeben!", JOptionPane.WARNING_MESSAGE);
+				SendMessage sm = new SendMessage("This Path is not a direct path to ManiaPlanet.exe!",
+						"Wrong path", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			if (!game.exists()) {
 				SendMessage sm = new SendMessage(
-						"Unter dem Pfad " + path.getText()
-								+ " konnte das Spiel nicht gefunden werden!\nBitte den Pfad nochmal überprüfen!",
-						"Spiel nicht gefunden!", JOptionPane.WARNING_MESSAGE);
+						"Game was not found under " + path.getText()
+								+ ". Please check the path for typos\nAnd try again!",
+						"Game not found!", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			ConfigManager cfg = new ConfigManager();
@@ -74,8 +74,8 @@ public class GamePathConfigurator extends JFrame implements ActionListener {
 				ef.printStackTrace();
 			}
 			SendMessage sm = new SendMessage(
-					"Der Pfad zur Haupt Exe wurde erfolgreich gesetzt.\nBei Klick auf OK wird die Haupt-Oberfläche gestartet",
-					"Pfad erfolgreich gesetzt!", JOptionPane.WARNING_MESSAGE);
+					"Gamepath successfully set!\nIf you click on OK the main-program will start again",
+					"Path set!", JOptionPane.WARNING_MESSAGE);
 			Main main = new Main(null);
 			setVisible(false);
 		}
